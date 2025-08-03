@@ -1,0 +1,57 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>Dashboard</h1>
+      <div class="user-info">
+        <span>Welcome, {{ currentUser?.username }}!</span>
+        <button class="logout-button" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="welcome-card">
+      <h2>Welcome to Your Dashboard</h2>
+      <p>You have successfully logged in with the following credentials:</p>
+      
+      <div class="user-details">
+        <div class="detail-item">
+          <strong>Username:</strong> {{ currentUser?.username }}
+        </div>
+        <div class="detail-item">
+          <strong>Email:</strong> {{ currentUser?.email }}
+        </div>
+        <div class="detail-item">
+          <strong>Role:</strong> {{ currentUser?.role }}
+        </div>
+        <div class="detail-item">
+          <strong>User ID:</strong> {{ currentUser?.id }}
+        </div>
+      </div>
+
+      <div class="success-message">
+        <p>✅ Authentication successful!</p>
+        <p>The password was validated against the encrypted hash stored in the application settings.</p>
+      </div>
+    </div>
+
+    <div class="info-cards">
+      <div class="info-card">
+        <h3>Security Features</h3>
+        <ul>
+          <li>Password encryption using hash functions</li>
+          <li>Form validation with Angular Reactive Forms</li>
+          <li>Session management with localStorage</li>
+          <li>Route protection for authenticated users</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>Demo Credentials</h3>
+        <p><strong>Username:</strong> test</p>
+        <p><strong>Password:</strong> test123</p>
+        <p class="note">These credentials are hardcoded for demonstration purposes.</p>
+      </div>
+    </div>
+  </main>
+</div> 
