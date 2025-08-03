@@ -9,14 +9,14 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    LoginComponent,
-    DashboardComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppComponent,
+    LoginComponent,
+    DashboardComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

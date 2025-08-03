@@ -46,22 +46,23 @@ export function getDemoCredentials() {
 }
 
 // Helper function to validate password hash
-export function validatePasswordHash(password: string, storedHash: string): boolean {
-  const inputHash = simpleHash(password);
-  return inputHash === storedHash;
+export function validatePasswordHash(password: string, storedHash: string): Promise<boolean> {
+  // Use built-in browser crypto API for SHA-1 hashing
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle) {
+    return sha1Hash(password).then(hash => hash === storedHash);
+  } else {
+    // Unsupported environment
+    console.error('SHA-1 hashing is not supported in this environment.');
+    return Promise.resolve(false);
+  }
 }
 
-// Simple hash function (for demo purposes)
-// In production, use proper encryption libraries like bcrypt
-function simpleHash(str: string): string {
-  let hash = 0;
-  if (str.length === 0) return hash.toString();
-  
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  
-  return Math.abs(hash).toString(16);
-} 
+// Helper for browser SHA-1 hashing
+function sha1Hash(str: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  return window.crypto.subtle.digest('SHA-1', data).then(buffer => {
+    return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+  });
+}
+// Removed custom simpleHash function; now using SHA-1

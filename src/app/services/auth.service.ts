@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { getDemoCredentials, validatePasswordHash } from '../app-settings';
 
@@ -26,39 +26,31 @@ export class AuthService {
   constructor() {}
 
   login(username: string, password: string): Observable<LoginResponse> {
-    // Simulate API call delay
-    return of(this.validateCredentials(username, password)).pipe(
-      delay(1000)
-    );
-  }
-
-  private validateCredentials(username: string, password: string): LoginResponse {
-    const demoCredentials = getDemoCredentials();
-    
-    if (username === demoCredentials.username && 
-        validatePasswordHash(password, demoCredentials.passwordHash)) {
-      
-      const user: User = {
-        id: 1,
-        username: username,
-        email: 'test@example.com',
-        role: 'user'
-      };
-
-      // Store authentication data
-      this.setAuthToken('demo-token-' + Date.now());
-      this.setCurrentUser(user);
-
-      return {
-        success: true,
-        user: user
-      };
-    } else {
-      return {
-        success: false,
-        message: 'Invalid username or password'
-      };
-    }
+    // Simulate API call delay and async password validation
+    return new Observable<LoginResponse>(observer => {
+      const demoCredentials = getDemoCredentials();
+      if (username === demoCredentials.username) {
+        validatePasswordHash(password, demoCredentials.passwordHash).then(isValid => {
+          if (isValid) {
+            const user: User = {
+              id: 1,
+              username: username,
+              email: 'test@example.com',
+              role: 'user'
+            };
+            this.setAuthToken('demo-token-' + Date.now());
+            this.setCurrentUser(user);
+            observer.next({ success: true, user });
+          } else {
+            observer.next({ success: false, message: 'Invalid username or password' });
+          }
+          observer.complete();
+        });
+      } else {
+        observer.next({ success: false, message: 'Invalid username or password' });
+        observer.complete();
+      }
+    }).pipe(delay(1000));
   }
 
   logout(): void {
@@ -86,6 +78,4 @@ export class AuthService {
   private setCurrentUser(user: User): void {
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
   }
-
-
-} 
+}
