@@ -10,10 +10,16 @@
       ],
       "extends": [
         "eslint:recommended",
-        "@angular-eslint/recommended",
-        "@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates"
       ],
+      "env": {
+        "browser": true,
+        "es2024": true
+      },
       "rules": {
+        "no-undef": "off",
+        "no-unused-vars": "off",
         "@angular-eslint/directive-selector": [
           "error",
           {

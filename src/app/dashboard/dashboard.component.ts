@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, User } from '../services/auth.service';
 
@@ -10,12 +10,10 @@ import { AuthService, User } from '../services/auth.service';
   imports: []
 })
 export class DashboardComponent implements OnInit {
-  currentUser: User | null = null;
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  currentUser: User | null = null;
 
   ngOnInit(): void {
     // Check if user is authenticated

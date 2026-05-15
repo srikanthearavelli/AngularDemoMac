@@ -20,8 +20,8 @@ export const APP_SETTINGS: AppSettings = {
   auth: {
     demoCredentials: {
       username: 'test',
-      // SHA-1 hash of 'test123' - in production, use bcrypt or similar
-      passwordHash: 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3'
+      // SHA-256 hash of 'test123' - in production, use bcrypt or similar
+      passwordHash: 'ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae'
     },
     sessionTimeout: 30 // 30 minutes
   },
@@ -47,22 +47,22 @@ export function getDemoCredentials() {
 
 // Helper function to validate password hash
 export function validatePasswordHash(password: string, storedHash: string): Promise<boolean> {
-  // Use built-in browser crypto API for SHA-1 hashing
+  // Use built-in browser crypto API for SHA-256 hashing
   if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle) {
-    return sha1Hash(password).then(hash => hash === storedHash);
+    return sha256Hash(password).then(hash => hash === storedHash);
   } else {
     // Unsupported environment
-    console.error('SHA-1 hashing is not supported in this environment.');
+    console.error('SHA-256 hashing is not supported in this environment.');
     return Promise.resolve(false);
   }
 }
 
-// Helper for browser SHA-1 hashing
-function sha1Hash(str: string): Promise<string> {
+// Helper for browser SHA-256 hashing
+function sha256Hash(str: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(str);
-  return window.crypto.subtle.digest('SHA-1', data).then(buffer => {
+  return window.crypto.subtle.digest('SHA-256', data).then(buffer => {
     return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
   });
 }
-// Removed custom simpleHash function; now using SHA-1
+// Removed custom simpleHash function; now using SHA-256
